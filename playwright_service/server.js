@@ -409,6 +409,21 @@ app.post('/chat', async (req, res) => {
     }
 });
 
+  // OCR Upload endpoint
+  app.post("/ocr-upload", async (req, res) => {
+      console.log("📸 OCR Upload endpoint called");
+      try {
+          const { image } = req.body;
+          if (!image) {
+              return res.status(400).json({ error: "Image data is required" });
+          }
+          res.json({ text: "OCR processing not implemented yet", success: true });
+      } catch (error) {
+          console.error("❌ OCR Upload error:", error);
+          res.status(500).json({ error: "OCR processing failed" });
+      }
+  });
+
 // Health check
 app.get('/health', (req, res) => {
     res.json({
