@@ -38,10 +38,12 @@
         
         // Tooltips are always enabled - no toggle needed
         console.log('✅ Tooltip Companion is active! (Tooltips always enabled)');
-    console.log(`   Backend Service URL: ${BACKEND_SERVICE_URL}`);
+        console.log(`   Backend Service URL: ${BACKEND_SERVICE_URL}`);
         
         // Initialize the tooltip system (always enabled)
+        console.log('🔧 About to call initTooltipSystem...');
         initTooltipSystem(BACKEND_SERVICE_URL, true);
+        console.log('✅ initTooltipSystem called successfully');
     });
     
     // Listen for messages from background script
@@ -90,6 +92,7 @@
     });
     
     function initTooltipSystem(BACKEND_SERVICE_URL, tooltipsEnabled = true) {
+        console.log('🎯 initTooltipSystem function called with URL:', BACKEND_SERVICE_URL);
         // State management - tooltips always enabled
         window.tooltipsEnabled = true;
         const cache = new Map();
