@@ -17,6 +17,9 @@
    - Use the `amplify.yml` file included in the repo
    - Build command: `npm run build`
    - Output directory: `.next`
+   - **IMPORTANT**: Make sure Node.js version is set to 18.x or higher
+   - Go to App settings → Build settings → Edit
+   - Set Node version to 18 or 20
 
 4. **Add Environment Variables**
    - Go to App settings → Environment variables
