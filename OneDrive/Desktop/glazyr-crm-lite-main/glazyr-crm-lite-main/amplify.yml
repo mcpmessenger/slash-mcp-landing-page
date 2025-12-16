@@ -3,13 +3,16 @@ frontend:
   phases:
     preBuild:
       commands:
-        - echo "Forcing npm usage - removing other lock files"
-        - rm -f pnpm-lock.yaml yarn.lock
-        - npm --version
+        - echo "=== FORCING NPM USAGE ==="
+        - echo "Removing any pnpm/yarn lock files that might confuse detection"
+        - rm -f pnpm-lock.yaml yarn.lock .pnpm-store
+        - echo "Verifying npm is available"
+        - npm --version || (echo "npm not found!" && exit 1)
         - echo "Installing dependencies with npm"
-        - npm ci --legacy-peer-deps
+        - npm ci --legacy-peer-deps || npm install --legacy-peer-deps
     build:
       commands:
+        - echo "Building with npm"
         - npm run build
   artifacts:
     baseDirectory: .next
