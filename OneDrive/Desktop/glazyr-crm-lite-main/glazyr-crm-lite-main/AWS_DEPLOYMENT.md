@@ -20,6 +20,9 @@
    - **IMPORTANT**: Make sure Node.js version is set to 18.x or higher
    - Go to App settings → Build settings → Edit
    - Set Node version to 18 or 20
+   - **CRITICAL**: In Build settings, look for "Package manager" or "Override package manager"
+   - If available, explicitly set it to "npm" (not auto-detect)
+   - If not available, the `amplify.yml` file should override it
 
 4. **Add Environment Variables**
    - Go to App settings → Environment variables
