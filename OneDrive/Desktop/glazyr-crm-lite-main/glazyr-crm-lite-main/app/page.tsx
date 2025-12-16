@@ -141,12 +141,6 @@ export default function GlazyrCRM() {
     }
   }, [])
 
-  // Manual refresh function
-  const handleRefresh = async () => {
-    setIsRefreshing(true)
-    await fetchContacts()
-  }
-
   // Save to Supabase or localStorage whenever contacts change
   useEffect(() => {
     if (contacts.length > 0 && !isLoading) {
