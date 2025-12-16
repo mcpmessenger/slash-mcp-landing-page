@@ -12,6 +12,7 @@ const nextConfig = {
   },
   // For AWS Amplify - use standalone output
   output: process.env.AMPLIFY ? 'standalone' : undefined,
+  // For Netlify - no special output needed, plugin handles it
 }
 
 export default nextConfig
