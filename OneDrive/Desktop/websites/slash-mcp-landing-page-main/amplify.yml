@@ -2,8 +2,8 @@ version: 1
 frontend:
   phases:
     preBuild:
-    commands:
-        - echo "Installing dependencies with npm ci (fallback to npm install if lockfile missing)"
+      commands:
+        - echo "Installing dependencies (npm ci if package-lock exists, else npm install)"
         - if [ -f package-lock.json ]; then npm ci; else npm install; fi
     build:
       commands:
