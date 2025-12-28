@@ -12,6 +12,11 @@ node_modules
 .pnp
 .pnp.js
 
+# Package manager lock files (using npm)
+bun.lockb
+pnpm-lock.yaml
+yarn.lock
+
 # Build outputs
 dist
 dist-ssr
