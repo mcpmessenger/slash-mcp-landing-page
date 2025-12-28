@@ -28,10 +28,16 @@ import langchainLogo from "@/assets/logos/langchain.png";
 // --- Types ---
 export type AnimationPhase = "scatter" | "line" | "circle" | "bottom-strip";
 
+type MCPServerCard = {
+    name: string;
+    description: string;
+    url: string;
+    logo: string;
+};
+
 interface FlipCardProps {
-    src: string;
+    entry: MCPServerCard;
     index: number;
-    total: number;
     phase: AnimationPhase;
     target: { x: number; y: number; rotation: number; scale: number; opacity: number };
 }
@@ -41,11 +47,12 @@ const IMG_WIDTH = 60;
 const IMG_HEIGHT = 60;
 
 function FlipCard({
-    src,
+    entry,
     index,
     phase,
     target,
 }: FlipCardProps) {
+    const openLink = () => window.open(entry.url, "_blank");
     return (
         <motion.div
             animate={{
@@ -68,6 +75,14 @@ function FlipCard({
                 perspective: "1000px",
             }}
             className="cursor-pointer group"
+            role="button"
+            tabIndex={0}
+            onClick={openLink}
+            onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                    openLink();
+                }
+            }}
         >
             <motion.div
                 className="relative h-full w-full"
@@ -81,7 +96,7 @@ function FlipCard({
                     style={{ backfaceVisibility: "hidden" }}
                 >
                     <img
-                        src={src}
+                        src={entry.logo}
                         alt={`mcp-server-${index}`}
                         className="h-full w-full object-contain"
                     />
@@ -95,6 +110,8 @@ function FlipCard({
                     <div className="text-center">
                         <p className="text-[8px] font-bold text-primary uppercase tracking-widest mb-1">MCP</p>
                         <p className="text-[10px] font-medium text-foreground">Server</p>
+                        <p className="text-xs font-semibold text-foreground tracking-wide mt-2">{entry.name}</p>
+                        <p className="text-[10px] text-muted-foreground">{entry.description}</p>
                     </div>
                 </div>
             </motion.div>
@@ -103,30 +120,126 @@ function FlipCard({
 }
 
 // --- Main Hero Component ---
-const TOTAL_IMAGES = 19;
+const MCP_SERVERS: MCPServerCard[] = [
+    {
+        name: "Playwright MCP",
+        description: "GitHub repository",
+        url: "https://github.com/microsoft/playwright-mcp",
+        logo: playwrightLogo,
+    },
+    {
+        name: "GitHub MCP",
+        description: "Official docs",
+        url: "https://docs.github.com/en/copilot/how-tos/provide-context/use-mcp/use-the-github-mcp-server",
+        logo: githubLogo,
+    },
+    {
+        name: "Context7 MCP",
+        description: "Reference repo",
+        url: "https://www.google.com/search?q=https://github.com/context7/mcp-server",
+        logo: context7Logo,
+    },
+    {
+        name: "Cursor MCP",
+        description: "Extension API docs",
+        url: "https://cursor.com/docs/context/mcp-extension-api",
+        logo: cursorLogo,
+    },
+    {
+        name: "Zapier MCP",
+        description: "Official landing page",
+        url: "https://mcp.zapier.com/",
+        logo: zapierLogo,
+    },
+    {
+        name: "Supabase MCP",
+        description: "Documentation",
+        url: "https://www.google.com/search?q=https://supabase.com/docs/guides/resources/mcp",
+        logo: supabaseLogo,
+    },
+    {
+        name: "n8n MCP",
+        description: "Landing page",
+        url: "https://www.n8n-mcp.com/",
+        logo: n8nLogo,
+    },
+    {
+        name: "Figma MCP",
+        description: "Official docs",
+        url: "https://help.figma.com/hc/en-us/articles/35280968300439-Figma-MCP-collection-What-is-the-Figma-MCP-server",
+        logo: figmaLogo,
+    },
+    {
+        name: "Notion MCP",
+        description: "GitHub repository",
+        url: "https://github.com/makenotion/notion-mcp-server",
+        logo: notionLogo,
+    },
+    {
+        name: "Jira MCP",
+        description: "Atlassian repository",
+        url: "https://github.com/atlassian/atlassian-mcp-server",
+        logo: jiraLogo,
+    },
+    {
+        name: "Atlassian MCP",
+        description: "Connector repo",
+        url: "https://github.com/atlassian/atlassian-mcp-server",
+        logo: atlassianLogo,
+    },
+    {
+        name: "Slack MCP",
+        description: "GitHub repository",
+        url: "https://github.com/zencoderai/slack-mcp-server",
+        logo: slackLogo,
+    },
+    {
+        name: "Linear MCP",
+        description: "GitHub repository",
+        url: "https://www.google.com/search?q=https://github.com/ibraheem4/linear-mcp",
+        logo: linearLogo,
+    },
+    {
+        name: "Puppeteer MCP",
+        description: "GitHub repository",
+        url: "https://github.com/modelcontextprotocol/servers/tree/main/src/puppeteer",
+        logo: puppeteerLogo,
+    },
+    {
+        name: "Stripe MCP",
+        description: "Official docs",
+        url: "https://docs.stripe.com/mcp",
+        logo: stripeLogo,
+    },
+    {
+        name: "GitLab MCP",
+        description: "Documentation",
+        url: "https://docs.gitlab.com/user/gitlab_duo/model_context_protocol/mcp_server/",
+        logo: gitlabLogo,
+    },
+    {
+        name: "Shopify MCP",
+        description: "Dev docs",
+        url: "https://shopify.dev/docs/apps/build/devmcp",
+        logo: shopifyLogo,
+    },
+    {
+        name: "Snowflake MCP",
+        description: "GitHub repository",
+        url: "https://www.google.com/url?sa=E&source=gmail&q=https://github.com/modelcontextprotocol/servers/tree/main/src/snowflake",
+        logo: snowflakeLogo,
+    },
+    {
+        name: "LangChain MCP",
+        description: "GitHub repository",
+        url: "https://www.google.com/search?q=https://github.com/langchain-ai/langchain-mcp",
+        logo: langchainLogo,
+    },
+];
+
 const MAX_SCROLL = 3000;
 
-const IMAGES = [
-    playwrightLogo,
-    githubLogo,
-    context7Logo,
-    cursorLogo,
-    zapierLogo,
-    supabaseLogo,
-    n8nLogo,
-    figmaLogo,
-    notionLogo,
-    jiraLogo,
-    atlassianLogo,
-    slackLogo,
-    linearLogo,
-    puppeteerLogo,
-    stripeLogo,
-    gitlabLogo,
-    shopifyLogo,
-    snowflakeLogo,
-    langchainLogo,
-];
+const TOTAL_IMAGES = MCP_SERVERS.length;
 
 const lerp = (start: number, end: number, t: number) => start * (1 - t) + end * t;
 
@@ -227,7 +340,7 @@ export default function IntroAnimation() {
     }, []);
 
     const scatterPositions = useMemo(() => {
-        return IMAGES.map(() => ({
+        return MCP_SERVERS.map(() => ({
             x: (Math.random() - 0.5) * 1500,
             y: (Math.random() - 0.5) * 1000,
             rotation: (Math.random() - 0.5) * 180,
@@ -327,7 +440,7 @@ export default function IntroAnimation() {
 
                 {/* Main Container */}
                 <div className="relative flex items-center justify-center w-full h-full">
-                    {IMAGES.slice(0, TOTAL_IMAGES).map((src, i) => {
+                    {MCP_SERVERS.map((entry, i) => {
                         let target = { x: 0, y: 0, rotation: 0, scale: 1, opacity: 1 };
 
                         if (introPhase === "scatter") {
@@ -384,10 +497,9 @@ export default function IntroAnimation() {
 
                         return (
                             <FlipCard
-                                key={i}
-                                src={src}
+                                key={entry.name}
+                                entry={entry}
                                 index={i}
-                                total={TOTAL_IMAGES}
                                 phase={introPhase}
                                 target={target}
                             />
