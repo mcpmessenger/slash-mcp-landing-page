@@ -1,0 +1,594 @@
+"use client";
+
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import { motion, useTransform, useSpring, useMotionValue } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Github, CheckCircle2, Zap, Shield, Settings } from "lucide-react";
+
+// MCP Server Logos
+import playwrightLogo from "@/assets/logos/playwright.png";
+import githubLogo from "@/assets/logos/github-dark.png";
+
+import cursorLogo from "@/assets/logos/cursor.png";
+import zapierLogo from "@/assets/logos/zapier.png";
+import supabaseLogo from "@/assets/logos/supabase.png";
+import n8nLogo from "@/assets/logos/n8n.png";
+import figmaLogo from "@/assets/logos/figma.png";
+import notionLogo from "@/assets/logos/notion.png";
+
+import atlassianLogo from "@/assets/logos/atlassian.png";
+import slackLogo from "@/assets/logos/slack.png";
+import linearLogo from "@/assets/logos/linear.png";
+import puppeteerLogo from "@/assets/logos/puppeteer.png";
+import stripeLogo from "@/assets/logos/stripe.png";
+import gitlabLogo from "@/assets/logos/gitlab.png";
+import shopifyLogo from "@/assets/logos/shopify.png";
+import snowflakeLogo from "@/assets/logos/snowflake.png";
+import langchainLogo from "@/assets/logos/langchain.png";
+
+// --- Types ---
+export type AnimationPhase = "scatter" | "line" | "circle" | "bottom-strip";
+
+type MCPServerCard = {
+    name: string;
+    description: string;
+    url: string;
+    logo: string;
+};
+
+interface FlipCardProps {
+    entry: MCPServerCard;
+    index: number;
+    phase: AnimationPhase;
+    target: { x: number; y: number; rotation: number; scale: number; opacity: number };
+}
+
+// --- FlipCard Component ---
+const IMG_WIDTH = 60;
+const IMG_HEIGHT = 60;
+
+function FlipCard({
+    entry,
+    index,
+    phase,
+    target,
+}: FlipCardProps) {
+    const openLink = () => window.open(entry.url, "_blank");
+    return (
+        <motion.div
+            animate={{
+                x: target.x,
+                y: target.y,
+                rotate: target.rotation,
+                scale: target.scale,
+                opacity: target.opacity,
+            }}
+            transition={{
+                type: "spring",
+                stiffness: 40,
+                damping: 15,
+            }}
+            style={{
+                position: "absolute",
+                width: IMG_WIDTH,
+                height: IMG_HEIGHT,
+                transformStyle: "preserve-3d",
+                perspective: "1000px",
+            }}
+            className="cursor-pointer group"
+            role="button"
+            tabIndex={0}
+            onClick={openLink}
+            onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                    openLink();
+                }
+            }}
+        >
+            <motion.div
+                className="relative h-full w-full"
+                style={{ transformStyle: "preserve-3d" }}
+                transition={{ duration: 0.6, type: "spring", stiffness: 260, damping: 20 }}
+                whileHover={{ rotateY: 180 }}
+            >
+                {/* Front Face */}
+                <div
+                    className="absolute inset-0 h-full w-full flex items-center justify-center p-2"
+                    style={{ backfaceVisibility: "hidden" }}
+                >
+                    <img
+                        src={entry.logo}
+                        alt={`mcp-server-${index}`}
+                        className="h-full w-full object-contain drop-shadow-lg"
+                    />
+                </div>
+
+                {/* Back Face */}
+                <div
+                    className="absolute inset-0 h-full w-full overflow-hidden rounded-xl shadow-lg bg-card flex flex-col items-center justify-center p-2 border border-border"
+                    style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+                >
+                    <div className="text-center">
+                        <p className="text-[8px] font-bold text-primary uppercase tracking-widest mb-1">MCP</p>
+                        <p className="text-[10px] font-medium text-foreground">Server</p>
+                        <p className="text-xs font-semibold text-foreground tracking-wide mt-2">{entry.name}</p>
+                        <p className="text-[10px] text-muted-foreground">{entry.description}</p>
+                    </div>
+                </div>
+            </motion.div>
+        </motion.div>
+    );
+}
+
+// --- Main Hero Component ---
+const MCP_SERVERS: MCPServerCard[] = [
+    {
+        name: "Playwright MCP",
+        description: "GitHub repository",
+        url: "https://github.com/microsoft/playwright-mcp",
+        logo: playwrightLogo,
+    },
+    {
+        name: "GitHub MCP",
+        description: "Official docs",
+        url: "https://docs.github.com/en/copilot/how-tos/provide-context/use-mcp/use-the-github-mcp-server",
+        logo: githubLogo,
+    },
+
+    {
+        name: "Cursor MCP",
+        description: "Extension API docs",
+        url: "https://cursor.com/docs/context/mcp-extension-api",
+        logo: cursorLogo,
+    },
+    {
+        name: "Zapier MCP",
+        description: "Official landing page",
+        url: "https://mcp.zapier.com/",
+        logo: zapierLogo,
+    },
+    {
+        name: "Supabase MCP",
+        description: "Documentation",
+        url: "https://www.google.com/search?q=https://supabase.com/docs/guides/resources/mcp",
+        logo: supabaseLogo,
+    },
+    {
+        name: "n8n MCP",
+        description: "Landing page",
+        url: "https://www.n8n-mcp.com/",
+        logo: n8nLogo,
+    },
+    {
+        name: "Figma MCP",
+        description: "Official docs",
+        url: "https://help.figma.com/hc/en-us/articles/35280968300439-Figma-MCP-collection-What-is-the-Figma-MCP-server",
+        logo: figmaLogo,
+    },
+    {
+        name: "Notion MCP",
+        description: "GitHub repository",
+        url: "https://github.com/makenotion/notion-mcp-server",
+        logo: notionLogo,
+    },
+
+    {
+        name: "Atlassian MCP",
+        description: "Connector repo",
+        url: "https://github.com/atlassian/atlassian-mcp-server",
+        logo: atlassianLogo,
+    },
+    {
+        name: "Slack MCP",
+        description: "GitHub repository",
+        url: "https://github.com/zencoderai/slack-mcp-server",
+        logo: slackLogo,
+    },
+    {
+        name: "Linear MCP",
+        description: "GitHub repository",
+        url: "https://www.google.com/search?q=https://github.com/ibraheem4/linear-mcp",
+        logo: linearLogo,
+    },
+    {
+        name: "Puppeteer MCP",
+        description: "GitHub repository",
+        url: "https://github.com/modelcontextprotocol/servers/tree/main/src/puppeteer",
+        logo: puppeteerLogo,
+    },
+    {
+        name: "Stripe MCP",
+        description: "Official docs",
+        url: "https://docs.stripe.com/mcp",
+        logo: stripeLogo,
+    },
+    {
+        name: "GitLab MCP",
+        description: "Documentation",
+        url: "https://docs.gitlab.com/user/gitlab_duo/model_context_protocol/mcp_server/",
+        logo: gitlabLogo,
+    },
+    {
+        name: "Shopify MCP",
+        description: "Dev docs",
+        url: "https://shopify.dev/docs/apps/build/devmcp",
+        logo: shopifyLogo,
+    },
+    {
+        name: "Snowflake MCP",
+        description: "GitHub repository",
+        url: "https://www.google.com/url?sa=E&source=gmail&q=https://github.com/modelcontextprotocol/servers/tree/main/src/snowflake",
+        logo: snowflakeLogo,
+    },
+    {
+        name: "LangChain MCP",
+        description: "GitHub repository",
+        url: "https://www.google.com/search?q=https://github.com/langchain-ai/langchain-mcp",
+        logo: langchainLogo,
+    },
+];
+
+const MAX_SCROLL = 3000;
+const SNAP_POINTS = [0, 600, MAX_SCROLL];
+const WHEEL_FORCE_THRESHOLD = 100;
+const TOUCH_FORCE_THRESHOLD = 30;
+
+const TOTAL_IMAGES = MCP_SERVERS.length;
+
+const lerp = (start: number, end: number, t: number) => start * (1 - t) + end * t;
+
+export default function IntroAnimation() {
+    const [introPhase, setIntroPhase] = useState<AnimationPhase>("scatter");
+    const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (!containerRef.current) return;
+
+        const handleResize = (entries: ResizeObserverEntry[]) => {
+            for (const entry of entries) {
+                setContainerSize({
+                    width: entry.contentRect.width,
+                    height: entry.contentRect.height,
+                });
+            }
+        };
+
+        const observer = new ResizeObserver(handleResize);
+        observer.observe(containerRef.current);
+
+        setContainerSize({
+            width: containerRef.current.offsetWidth,
+            height: containerRef.current.offsetHeight,
+        });
+
+        return () => observer.disconnect();
+    }, []);
+
+    const virtualScroll = useMotionValue(0);
+    const scrollRef = useRef(0);
+    const snapIndexRef = useRef(0);
+
+    const goToSnapIndex = (index: number) => {
+        const boundedIndex = Math.min(Math.max(index, 0), SNAP_POINTS.length - 1);
+        if (boundedIndex === snapIndexRef.current) return;
+        snapIndexRef.current = boundedIndex;
+        const newScroll = SNAP_POINTS[boundedIndex];
+        scrollRef.current = newScroll;
+        virtualScroll.set(newScroll);
+    };
+
+    const handleScrollDirection = (direction: number, forceJump = false) => {
+        if (direction === 0) return;
+        if (forceJump) {
+            goToSnapIndex(direction > 0 ? SNAP_POINTS.length - 1 : 0);
+            return;
+        }
+        goToSnapIndex(snapIndexRef.current + direction);
+    };
+
+    useEffect(() => {
+        const container = containerRef.current;
+        if (!container) return;
+
+        const handleWheel = (e: WheelEvent) => {
+            e.preventDefault();
+            const direction = Math.sign(e.deltaY);
+            const forceJump = Math.abs(e.deltaY) > WHEEL_FORCE_THRESHOLD;
+            handleScrollDirection(direction, forceJump);
+        };
+
+        let touchStartY = 0;
+        let touchTriggered = false;
+        const handleTouchStart = (e: TouchEvent) => {
+            touchStartY = e.touches[0].clientY;
+            touchTriggered = false;
+        };
+        const handleTouchMove = (e: TouchEvent) => {
+            e.preventDefault();
+            if (touchTriggered) return;
+
+            const touchY = e.touches[0].clientY;
+            const deltaY = touchStartY - touchY;
+            touchStartY = touchY;
+
+            if (Math.abs(deltaY) < TOUCH_FORCE_THRESHOLD) return;
+
+            touchTriggered = true;
+            const direction = Math.sign(deltaY);
+            const forceJump = Math.abs(deltaY) > TOUCH_FORCE_THRESHOLD * 2;
+            handleScrollDirection(direction, forceJump);
+        };
+        const handleTouchEnd = () => {
+            touchTriggered = false;
+        };
+        const handleTouchCancel = () => {
+            touchTriggered = false;
+        };
+
+        container.addEventListener("wheel", handleWheel, { passive: false });
+        container.addEventListener("touchstart", handleTouchStart, { passive: false });
+        container.addEventListener("touchmove", handleTouchMove, { passive: false });
+        container.addEventListener("touchend", handleTouchEnd);
+        container.addEventListener("touchcancel", handleTouchCancel);
+
+        return () => {
+            container.removeEventListener("wheel", handleWheel);
+            container.removeEventListener("touchstart", handleTouchStart);
+            container.removeEventListener("touchmove", handleTouchMove);
+            container.removeEventListener("touchend", handleTouchEnd);
+            container.removeEventListener("touchcancel", handleTouchCancel);
+        };
+    }, [virtualScroll]);
+
+    const morphProgress = useTransform(virtualScroll, [0, 600], [0, 1]);
+    const smoothMorph = useSpring(morphProgress, { stiffness: 40, damping: 20 });
+
+    const scrollRotate = useTransform(virtualScroll, [600, 3000], [0, 360]);
+    const smoothScrollRotate = useSpring(scrollRotate, { stiffness: 40, damping: 20 });
+
+    const mouseX = useMotionValue(0);
+    const smoothMouseX = useSpring(mouseX, { stiffness: 30, damping: 20 });
+
+    useEffect(() => {
+        const container = containerRef.current;
+        if (!container) return;
+
+        const handleMouseMove = (e: MouseEvent) => {
+            const rect = container.getBoundingClientRect();
+            const relativeX = e.clientX - rect.left;
+            const normalizedX = (relativeX / rect.width) * 2 - 1;
+            mouseX.set(normalizedX * 100);
+        };
+        container.addEventListener("mousemove", handleMouseMove);
+        return () => container.removeEventListener("mousemove", handleMouseMove);
+    }, [mouseX]);
+
+    useEffect(() => {
+        const timer1 = setTimeout(() => setIntroPhase("line"), 500);
+        const timer2 = setTimeout(() => setIntroPhase("circle"), 2500);
+        return () => { clearTimeout(timer1); clearTimeout(timer2); };
+    }, []);
+
+    const scatterPositions = useMemo(() => {
+        return MCP_SERVERS.map(() => ({
+            x: (Math.random() - 0.5) * 1500,
+            y: (Math.random() - 0.5) * 1000,
+            rotation: (Math.random() - 0.5) * 180,
+            scale: 0.6,
+            opacity: 0,
+        }));
+    }, []);
+
+    const [morphValue, setMorphValue] = useState(0);
+    const [rotateValue, setRotateValue] = useState(0);
+    const [parallaxValue, setParallaxValue] = useState(0);
+
+    useEffect(() => {
+        const unsubscribeMorph = smoothMorph.on("change", setMorphValue);
+        const unsubscribeRotate = smoothScrollRotate.on("change", setRotateValue);
+        const unsubscribeParallax = smoothMouseX.on("change", setParallaxValue);
+        return () => {
+            unsubscribeMorph();
+            unsubscribeRotate();
+            unsubscribeParallax();
+        };
+    }, [smoothMorph, smoothScrollRotate, smoothMouseX]);
+
+    const contentOpacity = useTransform(smoothMorph, [0.8, 1], [0, 1]);
+    const contentY = useTransform(smoothMorph, [0.8, 1], [20, 0]);
+
+    return (
+        <div ref={containerRef} className="relative w-full h-full bg-background overflow-hidden">
+            <div className="flex h-full w-full flex-col items-center justify-center perspective-1000">
+
+                {/* Intro Text */}
+                <div className="absolute z-0 flex flex-col items-center justify-center text-center pointer-events-none top-1/2 -translate-y-1/2">
+                    <motion.h1
+                        initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
+                        animate={introPhase === "circle" && morphValue < 0.5 ? { opacity: 1 - morphValue * 2, y: 0, filter: "blur(0px)" } : { opacity: 0, filter: "blur(10px)" }}
+                        transition={{ duration: 1 }}
+                        className="text-2xl font-medium tracking-tight text-foreground md:text-4xl flex items-center gap-3"
+                    >
+                        <img
+                            src="/logo.png"
+                            alt="Slash MCP Logo"
+                            className="w-8 h-8 md:w-12 md:h-12 object-contain"
+                        />
+                        Slash MCP
+                    </motion.h1>
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={introPhase === "circle" && morphValue < 0.5 ? { opacity: 0.5 - morphValue } : { opacity: 0 }}
+                        transition={{ duration: 1, delay: 0.2 }}
+                        className="mt-4 text-xs font-bold tracking-[0.2em] text-muted-foreground"
+                    >
+                        SCROLL TO EXPLORE
+                    </motion.p>
+                </div>
+
+                {/* Arc Active Content */}
+                <motion.div
+                    style={{ opacity: contentOpacity, y: contentY }}
+                    className="absolute top-[10%] z-10 flex flex-col items-center justify-center text-center px-4 w-full max-w-5xl"
+                >
+                    <h2 className="text-3xl md:text-5xl font-semibold text-foreground tracking-tight mb-4 pointer-events-none">
+                        Unlock the Power of MCP
+                    </h2>
+                    <p className="text-sm md:text-base text-muted-foreground max-w-lg leading-relaxed mb-8 pointer-events-none">
+                        Seamlessly connect your AI agents to a curated ecosystem of MCP servers. Empower innovation, streamline workflows, and shape tomorrow's tech—starting today.
+                    </p>
+
+                    {/* Benefits Grid */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-8 w-full max-w-4xl pointer-events-none">
+                        {[
+                            { icon: CheckCircle2, title: "One-Click Install", tech: "STDIO" },
+                            { icon: Zap, title: "Intelligent Routing", tech: "Pulsar" },
+                            { icon: Shield, title: "Quota Protection", tech: "Matcher" },
+                            { icon: Settings, title: "Zero-Config", tech: "Protocol" },
+                        ].map((benefit, index) => {
+                            const Icon = benefit.icon;
+                            return (
+                                <motion.div
+                                    key={index}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                                    className="flex flex-col items-center p-3 md:p-4 rounded-lg bg-card/50 backdrop-blur-sm border border-border/50"
+                                >
+                                    <Icon className="w-5 h-5 md:w-6 md:h-6 text-primary mb-2" />
+                                    <p className="text-xs md:text-sm font-semibold text-foreground mb-1">{benefit.title}</p>
+                                    <p className="text-[10px] md:text-xs text-muted-foreground">{benefit.tech}</p>
+                                </motion.div>
+                            );
+                        })}
+                    </div>
+
+                    {/* CTA Button */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: 0.4 }}
+                        className="mb-6"
+                    >
+                        <motion.div
+                            whileTap={{
+                                scale: 0.95,
+                                opacity: 0.6,
+                                filter: "blur(4px)"
+                            }}
+                            animate={{
+                                scale: 1,
+                                opacity: 1,
+                                filter: "blur(0px)"
+                            }}
+                            transition={{
+                                duration: 0.3,
+                                ease: "easeOut"
+                            }}
+                        >
+                            <Button
+                                size="lg"
+                                variant="default"
+                                className="text-base px-8 py-6 rounded-lg font-medium flex items-center gap-2"
+                                onClick={() => {
+                                    window.open("https://mcp-registry-sentilabs.vercel.app/chat", "_blank");
+                                }}
+                            >
+                                <img
+                                    src="/logo.png"
+                                    alt="Slash MCP Logo"
+                                    className="w-5 h-5 object-contain"
+                                />
+                                Dive In Now
+                            </Button>
+                        </motion.div>
+                    </motion.div>
+
+                    {/* GitHub Link */}
+                    <motion.a
+                        href="https://github.com/mcpmessenger/mcp-registry"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: 0.5 }}
+                        className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors group"
+                    >
+                        <Github size={20} className="group-hover:scale-110 transition-transform" />
+                        <span className="text-sm font-medium">View on GitHub</span>
+                    </motion.a>
+                </motion.div>
+
+                {/* Main Container */}
+                <div className="relative flex items-center justify-center w-full h-full">
+                    {MCP_SERVERS.map((entry, i) => {
+                        let target = { x: 0, y: 0, rotation: 0, scale: 1, opacity: 1 };
+
+                        if (introPhase === "scatter") {
+                            target = scatterPositions[i];
+                        } else if (introPhase === "line") {
+                            const lineSpacing = 70;
+                            const lineTotalWidth = TOTAL_IMAGES * lineSpacing;
+                            const lineX = i * lineSpacing - lineTotalWidth / 2;
+                            target = { x: lineX, y: 0, rotation: 0, scale: 1, opacity: 1 };
+                        } else {
+                            const isMobile = containerSize.width < 768;
+                            const minDimension = Math.min(containerSize.width, containerSize.height);
+
+                            const circleRadius = Math.min(minDimension * 0.35, 350);
+                            const circleAngle = (i / TOTAL_IMAGES) * 360;
+                            const circleRad = (circleAngle * Math.PI) / 180;
+                            const circlePos = {
+                                x: Math.cos(circleRad) * circleRadius,
+                                y: Math.sin(circleRad) * circleRadius,
+                                rotation: circleAngle + 90,
+                            };
+
+                            const baseRadius = Math.min(containerSize.width, containerSize.height * 1.5);
+                            const arcRadius = baseRadius * (isMobile ? 1.4 : 1.1);
+                            const arcApexY = containerSize.height * (isMobile ? 0.35 : 0.25);
+                            const arcCenterY = arcApexY + arcRadius;
+
+                            const spreadAngle = isMobile ? 100 : 130;
+                            const startAngle = -90 - (spreadAngle / 2);
+                            const step = spreadAngle / (TOTAL_IMAGES - 1);
+
+                            const scrollProgress = Math.min(Math.max(rotateValue / 360, 0), 1);
+                            const maxRotation = spreadAngle * 0.8;
+                            const boundedRotation = -scrollProgress * maxRotation;
+
+                            const currentArcAngle = startAngle + (i * step) + boundedRotation;
+                            const arcRad = (currentArcAngle * Math.PI) / 180;
+
+                            const arcPos = {
+                                x: Math.cos(arcRad) * arcRadius + parallaxValue,
+                                y: Math.sin(arcRad) * arcRadius + arcCenterY,
+                                rotation: currentArcAngle + 90,
+                                scale: isMobile ? 1.4 : 1.8,
+                            };
+
+                            target = {
+                                x: lerp(circlePos.x, arcPos.x, morphValue),
+                                y: lerp(circlePos.y, arcPos.y, morphValue),
+                                rotation: lerp(circlePos.rotation, arcPos.rotation, morphValue),
+                                scale: lerp(1, arcPos.scale, morphValue),
+                                opacity: 1,
+                            };
+                        }
+
+                        return (
+                            <FlipCard
+                                key={entry.name}
+                                entry={entry}
+                                index={i}
+                                phase={introPhase}
+                                target={target}
+                            />
+                        );
+                    })}
+                </div>
+            </div>
+        </div>
+    );
+}

@@ -1,0 +1,63 @@
+2025-12-28T10:31:38.820Z [INFO]: # Build environment configured with Standard build compute type: 8GiB Memory, 4vCPUs, 128GB Disk Space
+2025-12-28T10:31:39.302Z [INFO]: # Cloning repository: git@github.com:mcpmessenger/slash-mcp-landing-page.git
+2025-12-28T10:31:42.910Z [INFO]: 
+2025-12-28T10:31:43.002Z [INFO]: Cloning into 'slash-mcp-landing-page'...
+2025-12-28T10:31:43.003Z [INFO]: # Switching to commit: 0b16fb7e023c9667f35089e876509d38e533372d
+2025-12-28T10:31:44.000Z [INFO]: Note: switching to '0b16fb7e023c9667f35089e876509d38e533372d'.
+                                 You are in 'detached HEAD' state. You can look around, make experimental
+                                 changes and commit them, and you can discard any commits you make in this
+                                 state without impacting any branches by switching back to a branch.
+                                 If you want to create a new branch to retain commits you create, you may
+                                 do so (now or later) by using -c with the switch command. Example:
+                                 git switch -c <new-branch-name>
+                                 Or undo this operation with:
+                                 git switch -
+                                 Turn off this advice by setting config variable advice.detachedHead to false
+                                 HEAD is now at 0b16fb7 Fix(amplify): Guard npm ci with package-lock.json check
+2025-12-28T10:31:44.055Z [INFO]: Successfully cleaned up Git credentials
+2025-12-28T10:31:44.055Z [INFO]: # Checking for Git submodules at: /codebuild/output/src3658925263/src/slash-mcp-landing-page/.gitmodules
+2025-12-28T10:31:44.063Z [INFO]: # Retrieving environment cache...
+2025-12-28T10:31:44.115Z [WARNING]: ! Unable to write cache: {"code":"ERR_BAD_REQUEST","message":"Request failed with status code 404"})}
+2025-12-28T10:31:44.115Z [INFO]: ---- Setting Up SSM Secrets ----
+2025-12-28T10:31:44.115Z [INFO]: SSM params {"Path":"/amplify/d13c9ol84tiygx/main/","WithDecryption":true}
+2025-12-28T10:31:44.173Z [WARNING]: !Failed to set up process.env.secrets
+2025-12-28T10:31:44.948Z [INFO]: # No package override configuration found.
+2025-12-28T10:31:44.952Z [INFO]: # Retrieving cache...
+2025-12-28T10:31:44.995Z [INFO]: # Retrieved cache
+2025-12-28T10:31:48.973Z [INFO]: ## Starting Backend Build
+                                 ## Checking for associated backend environment...
+                                 ## No backend environment association found, continuing...
+2025-12-28T10:31:48.979Z [INFO]: ## Completed Backend Build
+2025-12-28T10:31:48.988Z [INFO]: ## Starting Frontend Build
+                                 # Starting phase: preBuild
+                                 # Executing command: npm ci
+2025-12-28T10:32:03.530Z [WARNING]: npm error code EUSAGE
+2025-12-28T10:32:03.536Z [WARNING]: npm error
+                                    npm error The `npm ci` command can only install with an existing package-lock.json or
+                                    npm error npm-shrinkwrap.json with lockfileVersion >= 1. Run an install with npm@5 or
+                                    npm error later to generate a package-lock.json file, then try again.
+                                    npm error
+                                    npm error Clean install a project
+                                    npm error
+                                    npm error Usage:
+                                    npm error npm ci
+                                    npm error
+                                    npm error Options:
+                                    npm error [--install-strategy <hoisted|nested|shallow|linked>] [--legacy-bundling]
+                                    npm error [--global-style] [--omit <dev|optional|peer> [--omit <dev|optional|peer> ...]]
+                                    npm error [--include <prod|dev|optional|peer> [--include <prod|dev|optional|peer> ...]]
+                                    npm error [--strict-peer-deps] [--foreground-scripts] [--ignore-scripts] [--no-audit]
+                                    npm error [--no-bin-links] [--no-fund] [--dry-run]
+                                    npm error [-w|--workspace <workspace-name> [-w|--workspace <workspace-name> ...]]
+                                    npm error [-ws|--workspaces] [--include-workspace-root] [--install-links]
+                                    npm error
+                                    npm error aliases: clean-install, ic, install-clean, isntall-clean
+                                    npm error
+                                    npm error Run "npm help ci" for more info
+                                    npm error A complete log of this run can be found in: /root/.npm/_logs/2025-12-28T10_31_51_921Z-debug-0.log
+2025-12-28T10:32:03.626Z [ERROR]: !!! Build failed
+2025-12-28T10:32:03.626Z [INFO]: Please read more about Amplify Hosting's support for SSR frameworks to find if your build failure is related to an unsupported feature: https://docs.aws.amazon.com/amplify/latest/userguide/amplify-ssr-framework-support.html. You may also find this troubleshooting guide useful: https://docs.aws.amazon.com/amplify/latest/userguide/troubleshooting-ssr-deployment.html
+2025-12-28T10:32:03.626Z [ERROR]: !!! Error: Command failed with exit code 1
+2025-12-28T10:32:03.626Z [INFO]: # Starting environment caching...
+2025-12-28T10:32:03.626Z [INFO]: # Environment caching completed
+
